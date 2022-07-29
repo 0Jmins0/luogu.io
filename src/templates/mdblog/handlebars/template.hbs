@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="blog-uid" content="{{ blogUID }}">
+    <meta name="blog-name" content="{{ blogName }}">
+    <meta name="current-user" content="{{ currentUser }}">
+    <meta name="theme-settings" content="{{ themeSettingsJson }}">
+    <link rel="stylesheet" href="/static/blog/mdblog/common.css">
+    <style>
+      .mdblog-background {
+        background-image: url({{ themeSettings.config.background.header}});
+        max-height: 350px;
+      }
+    </style>
+    {{>styles}}
+    <title>{{ title }} - {{ blogName }} - 洛谷博客</title>
+</head>
+<body class="mdui-theme-primary-{{ themeSettings.config.color.primary }}
+      mdui-theme-accent-{{ themeSettings.config.color.accent }}">
+<div class="mdblog-background">
+  <nav class="mdui-shadow">
+    <div id="small-header"></div>
+  </nav>
+  <div style="padding-top: 90px;padding-bottom: 40px">
+    <img class="mdui-center mdui-img-circle"
+         src="{{ picAddress }}/upload/usericon/{{ blogUID }}.png"
+         {{#unless themeSettings.config.show_icon}}
+           style="visibility: hidden"
+         {{/unless}}
+    >
+    <div class="mdui-valign">
+      <a href="." class="mdui-center mdui-typo-display-2
+        {{#if themeSettings.config.background.header}}
+          mdui-text-color-white-text
+        {{else}}
+           mdui-text-color-theme
+        {{/if}}"
+         style="
+         margin-bottom: 0;
+         margin-top: 15px;
+         text-decoration: none;
+      ">
+        {{ blogName }}
+      </a>
+
+    </div>
+    <div class="mdui-valign">
+      <p class="mdui-center mdui-typo-subheading-opacity
+        {{#if themeSettings.config.background.header}}
+          mdui-text-color-white-text
+        {{else}}
+           mdui-text-color-theme
+        {{/if}}"
+      >{{ blogSubtitle }} </p>
+    </div>
+  </div>
+</div>
+
+<main class='mdui-container-fluid' style="margin-top: 20px;">
+  <section id="main-container" class=" mdui-col-md-8 mdui-col-offset-md-2">
+    {{>content}}
+  </section>
+
+</main>
+
+<section>
+  <div class="mdui-drawer mdui-drawer-close" id="mdblog-drawer">
+    <ul class="mdui-list">
+      <li onclick="window.location.href='.';"
+          class="mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons">star</i>
+        <div class="mdui-list-item-content">首页</div>
+      </li>
+      {{#isBlogAdmin}}
+        <li onclick="window.location.href='{{ luoguAddress }}/blogAdmin';"
+            class="mdui-list-item mdui-ripple">
+          <i class="mdui-list-item-icon mdui-icon material-icons">error</i>
+          <div class="mdui-list-item-content">管理后台</div>
+        </li>
+      {{/isBlogAdmin}}
+    </ul>
+  </div>
+</section>
+<br>
+<footer class="mdui-color-theme">
+    <div class="mdui-valign">
+      <p class="mdui-center">
+        自豪地采用<a href="{{ luoguAddress }}" style="color: white;">洛谷</a>博客&nbsp;
+        Theme mdblog by <a href="https://darkflames.blog.luogu.org/" style="color: white;">darkflames</a>. <a href="_sitemap">Site Map</a>
+      </p>
+    </div>
+</footer>
+
+
+<script>
+window.BlogGlobals = {
+  blogName: document.querySelector('meta[name=blog-name]').getAttribute('content'),
+  blogUID: parseInt(document.querySelector('meta[name=blog-uid]').getAttribute('content')),
+  currentUser: parseInt(document.querySelector('meta[name=current-user]').getAttribute('content')),
+  luoguAddress: '{{ luoguAddress }}',
+  picAddress: '{{ picAddress }}',
+  config: JSON.parse(document.querySelector('meta[name=theme-settings]').getAttribute('content'))
+}
+BlogGlobals.isBlogAdmin = BlogGlobals.blogUID === BlogGlobals.currentUser;
+</script>
+<script src="/static/blog/mdblog/common.js"></script>
+{{>scripts}}
+</body>
+</html>

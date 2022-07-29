@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ title }} - {{ blogName }} - 洛谷博客</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="blog-uid" content="{{ blogUID }}">
+  <meta name="blog-name" content="{{ blogName }}">
+  <meta name="current-user" content="{{ currentUser }}">
+  <link rel="stylesheet" href="/static/blog/bread/common.css">
+  {{>styles}}
+</head>
+<body>
+<nav class="bread-navbar navbar-default navbar-custom navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header page-scroll">
+      <button class="btn navbar-toggle" type="button" style="float:right;">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href=".">{{ blogName }}</a>
+    </div>
+    <div id="bread-navbar">
+      <div class="navbar-collapse">
+        <ul class="nav navbar-nav bread-navbar-nav navbar-right">
+          <li class="nav-item">
+            <a href=".">文章</a>
+          </li>
+          {{#isBlogAdmin}}
+            <li class="nav-item">
+              <a target="_blank" href="{{ luoguAddress }}/blogAdmin">管理后台</a>
+            </li>
+          {{/isBlogAdmin}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<style>
+  .intro-header {
+    background-image: url({{ themeSettings.config.ui.background_image }});
+    background-size: cover;
+  }
+    {{#if themeSettings.config.ui.title_shadow}}
+    header.intro-header .site-heading {
+      text-shadow: 2px 2px 4px black;
+    }
+    {{/if}}
+</style>
+<header class="footer bread-height-extended intro-header main-head">
+  <div class="container" style="padding-top: 100px;">
+    <div class="row">
+      <div class="col">
+        <div class="site-heading">
+          <h1 id="bread-blog-title" style="font-style: normal;">{{ blogName }}</h1>
+          <div id="bread-blog-subtitle" class="subheading">{{ blogSubtitle }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{{>content}}
+<footer class="bread-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <ul class="list-inline text-center" style="margin-bottom: 10px">
+          <li>
+            <a target="_blank" href="{{ luoguAddress }}">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">洛</i>
+                            </span>
+            </a>
+          </li>
+          <li>
+            <a target="_blank" href="https://github.com/luogu-dev/luogu-blog-frontend">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+            </a>
+          </li>
+        </ul>
+        <p class="copyright text-muted">
+          <a class="item" href="_sitemap">Site Map </a>
+          {{#isBlogAdmin}}
+            <a target="_blank" href="{{ luoguAddress }}/blogAdmin">| 管理后台</a>
+          {{/isBlogAdmin}}
+          <br/>
+          Powered by Luogu Blog. Theme by <a href="https://github.com/Himself65">Himself65</a>. All rights reserved.
+          <br>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+<script>
+var BlogGlobals = {
+  blogName: document.querySelector('meta[name=blog-name]').getAttribute('content'),
+  blogUID: parseInt(document.querySelector('meta[name=blog-uid]').getAttribute('content')),
+  currentUser: parseInt(document.querySelector('meta[name=current-user]').getAttribute('content')),
+  luoguAddress: '{{ luoguAddress }}',
+  picAddress: '{{ picAddress }}'
+}
+</script>
+<script>
+var $body = document.body;
+var $nav = document.querySelector('nav');
+var $toggle = document.querySelector('.navbar-toggle');
+var $navbar = document.querySelector('#bread-navbar');
+var $collapse = document.querySelector('.navbar-collapse');
+
+var __BreadNav__ = {
+  close: function () {
+    $navbar.className = " ";
+    setTimeout(function () {
+      if ($navbar.className.indexOf('in') < 0) {
+        $collapse.style.height = "0px";
+      }
+    }, 400)
+  },
+  open: function () {
+    $collapse.style.height = "auto";
+    $navbar.className += " in";
+  }
+}
+
+let defaultClassName = $nav.className;
+$body.addEventListener('scroll', function (e) {
+  let scrollTop = document.body.scrollTop;
+  if (scrollTop !== 0) {
+    if ($nav.className.indexOf('navbar-white') < 0) {
+      $nav.className += " navbar-white"
+    }
+  } else {
+    $nav.className = defaultClassName
+  }
+})
+
+$body.addEventListener('click', function (e) {
+  if ($navbar.className.indexOf('in') > 0) {
+    __BreadNav__.close()
+  } else {
+    __BreadNav__.open()
+  }
+})
+
+$body.addEventListener('click', function (e) {
+  if (e.target === $toggle) return;
+  if (e.target.className === 'icon-bar') return;
+  __BreadNav__.close();
+})
+</script>
+<script src="/static/blog/bread/common.js"></script>
+{{>scripts}}
+</html>
